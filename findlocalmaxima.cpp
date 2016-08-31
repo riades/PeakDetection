@@ -1,18 +1,40 @@
 #include "findlocalmaxima.h"
 #include <iostream>
 
-std::vector<bool> localMaxima(const std::vector<double> &cwtVec, size_t minWinSize) {
+std::vector<bool> localMaxima(const std::vector<double> &cwtVec, size_t winSize) {
 	std::vector<bool> result(cwtVec.size());
-	for (int i = 0; i < cwtVec.size() - minWinSize + 1; i++) {
-		double maxima = cwtVec[i];
-		size_t indMaxima = i;
-		for (int j = i + 1; j < i + minWinSize; j++) {
-			if (cwtVec[j] > maxima) {
-				maxima = cwtVec[j];
-				indMaxima = j;
+	size_t halfWinSize = winSize / 2;
+	size_t i = 0;
+	size_t prevIndMax;
+	while (i < cwtVec.size()) {
+		size_t last;
+		if (i % 2 == 0) {
+			last = i + winSize - halfWinSize;
+		} else {
+			last = i + halfWinSize;
+		}
+		if (last > cwtVec.size()) {
+			last = cwtVec.size();
+		}
+		double maxVal = cwtVec[i];
+		size_t indMax = i;
+		for (size_t j = i + 1; j < last; j++) {
+			if (cwtVec[j] > maxVal) {
+				maxVal = cwtVec[j];
+				indMax = j;
 			}
 		}
-		result[indMaxima] = true;
+		if (i == 0 || i != 0 && indMax - prevIndMax >= winSize) {
+			result[indMax] = true;	
+			prevIndMax = indMax;
+		} else {
+			if (cwtVec[prevIndMax] < cwtVec[indMax]) {
+				result[indMax] = true;	
+				result[prevIndMax] = false;
+				prevIndMax = indMax;
+			}
+		}
+		i = last;
 	}
 	return result;
 }

@@ -39,7 +39,7 @@ int main() {
 	
 	std::vector<std::vector<bool> > result = findLocalMaxima(cwtVec, scales, 5);
 	std::ifstream localmax_file("data/localmax.txt");
-	for (size_t i = 0; i < result.size(); i++) {
+	/*for (size_t i = 0; i < result.size(); i++) {
 		getline(localmax_file,line);
 		std::stringstream stream(line);
 		for (size_t j = 0; j < result[i].size(); j++) {
@@ -47,7 +47,7 @@ int main() {
 			stream >> val;
 			result[i][j] = val;
 		}
-	}
+	}*/
 	
 	std::vector<Ridge> ridges = findRidges(result, scales);
 	std::vector<size_t> peaks = identifyMajorPeaks(cwtVec, scales, ridges);
