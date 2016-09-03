@@ -24,7 +24,7 @@ std::vector<bool> localMaxima(const std::vector<double> &cwtVec, size_t winSize)
 				indMax = j;
 			}
 		}
-		if (i == 0 || i != 0 && indMax - prevIndMax >= winSize) {
+		if (i == 0 || (i != 0 && indMax - prevIndMax >= winSize)) {
 			result[indMax] = true;	
 			prevIndMax = indMax;
 		} else {

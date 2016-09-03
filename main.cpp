@@ -8,12 +8,13 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 int main() {
 	std::string line;
   	std::vector<double> vec;
   	std::ifstream test_file ("data/test.txt");
-  	if (!test_file.is_open()) {
+  	if (!test_file.good()) {
     	return 0;
   	}
   	while (getline(test_file,line)) {
@@ -21,15 +22,18 @@ int main() {
     	double mass, intensity;
     	stream >> mass >> intensity;
     	vec.push_back(intensity);
-  	} 
-  	test_file.close();
+  	}
 	std::vector<double> scales(63);
 	std::iota(std::begin(scales), std::end(scales), 1);
-	std::vector<std::vector<double> > cwtVec = cwt(vec, scales, &mexh);
+	std::vector<std::vector<double> > cwtVec(scales.size());// = cwt(vec, scales, &mexh);
 	std::ifstream wcoefs_file("data/wcoefs.txt");
+	if (!wcoefs_file.good()) {
+    	return 0;
+  	}
 	for (size_t i = 0; i < cwtVec.size(); i++) {
 		getline(wcoefs_file,line);
 		std::stringstream stream(line);
+		cwtVec[i].resize(vec.size());
 		for (size_t j = 0; j < cwtVec[i].size(); j++) {
 			double val;
 			stream >> val;
@@ -38,17 +42,6 @@ int main() {
 	}
 	
 	std::vector<std::vector<bool> > result = findLocalMaxima(cwtVec, scales, 5);
-	std::ifstream localmax_file("data/localmax.txt");
-	/*for (size_t i = 0; i < result.size(); i++) {
-		getline(localmax_file,line);
-		std::stringstream stream(line);
-		for (size_t j = 0; j < result[i].size(); j++) {
-			int val;
-			stream >> val;
-			result[i][j] = val;
-		}
-	}*/
-	
 	std::vector<Ridge> ridges = findRidges(result, scales);
 	std::vector<size_t> peaks = identifyMajorPeaks(cwtVec, scales, ridges);
 	for (size_t k: peaks) {

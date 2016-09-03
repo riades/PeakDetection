@@ -16,6 +16,10 @@ std::set<size_t> whichTrue(std::vector<bool> vec) {
 	return result;
 }
 
+inline size_t absDiff(size_t a, size_t b) {
+	return a > b ? a - b : b - a;
+}
+
 std::vector<Ridge> findRidges(const std::vector<std::vector<bool> > &localMax, 
 	const std::vector<double> &scales, size_t minWinSize, size_t gapTh) {
 
@@ -58,7 +62,7 @@ std::vector<Ridge> findRidges(const std::vector<std::vector<bool> > &localMax,
 			winSize = minWinSize;
 		}
 		std::unordered_set<size_t> removed;
-		std::set<size_t> nextMaxSet; 
+		std::set<size_t> nextMaxSet;
 		for (size_t ind: currMaxSet) {
 			size_t ridgeName = currMaxMap[ind];
 			int status = ridgeHashTable[ridgeName].gapNumber;
@@ -88,10 +92,10 @@ std::vector<Ridge> findRidges(const std::vector<std::vector<bool> > &localMax,
 				newMaxInd = ind;
 			} else {
 				ridgeHashTable[ridgeName].gapNumber = 0;
-				newMaxInd = *temp.begin() + startInd;
+				newMaxInd = *temp.begin() + startInd; 
 				for (size_t t: temp) {
 					t += startInd;
-					if (abs(t - ind) < abs(newMaxInd - ind)) {
+					if (absDiff(t, ind) < absDiff(newMaxInd, ind)) {
 						newMaxInd = t;
 					}
 				}
@@ -154,8 +158,15 @@ std::vector<Ridge> findRidges(const std::vector<std::vector<bool> > &localMax,
 	}
 	/*std::sort(resultRidgeVec.begin(), resultRidgeVec.end(), 
 		[](const Ridge a, const Ridge b) -> bool {
-			return a.positions.back() < b.positions.back();
-		});
-	*/
+			//return a.positions.back() < b.positions.back();
+			if (a.positions.size() > b.positions.size()) {
+				return true;
+			}
+			if (a.positions.size() == b.positions.size() && a.positions.back() < b.positions.back()){
+				return true;
+			}
+			return false;
+		});	
+	*/	
 	return resultRidgeVec;
 }
