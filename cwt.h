@@ -3,11 +3,23 @@
 
 #include <vector>
 #include <cstdlib>
+#include <functional>
 
-typedef std::vector<double> (*waveletFunction)(size_t, double, double);
+using waveletFunction = std::function<double(double, double)>;
 
-std::vector<double> mexh(size_t lengthOut, double scale, double maxvalue);
-std::vector<std::vector<double> > cwt(const std::vector<double> &massSpectrum, 
-	const std::vector<double> &scales, waveletFunction wavelet);
+double mexh(double x, double scale);
+
+class CWT {
+private:
+	const size_t lengthOut = 1024;
+	const double maxValue = 8;
+	const double step;
+	waveletFunction wavelet;
+	std::vector<double> psi;
+public:
+	CWT(waveletFunction _wavelet = mexh);
+	std::vector<std::vector<double> > compute(const std::vector<double> &massSpectrum, 
+											  const std::vector<double> &scales) const;
+};
 
 #endif

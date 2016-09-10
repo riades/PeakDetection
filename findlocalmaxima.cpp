@@ -40,7 +40,8 @@ std::vector<bool> localMaxima(const std::vector<double> &cwtVec, size_t winSize)
 }
 
 std::vector<std::vector<bool> > findLocalMaxima(const std::vector<std::vector<double> > &cwtVec, 
-	const std::vector<double> &scales, size_t minWinSize) {
+												const std::vector<double> &scales, 
+												size_t minWinSize) {
 	std::vector<std::vector<bool> > result(scales.size());
 	for (size_t i = 0; i < scales.size(); i++) {
 		size_t winSize = 2*scales[i] + 1;

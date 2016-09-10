@@ -1,7 +1,3 @@
-#include "cwt.h"
-#include "findlocalmaxima.h"
-#include "identifymajorpeaks.h"
-#include "findridges.h"
 #include <iostream>
 #include <numeric>
 #include <vector>
@@ -9,6 +5,11 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+
+#include "cwt.h"
+#include "findlocalmaxima.h"
+#include "identifymajorpeaks.h"
+#include "findridges.h"
 
 int main() {
 	std::string line;
@@ -25,22 +26,8 @@ int main() {
   	}
 	std::vector<double> scales(63);
 	std::iota(std::begin(scales), std::end(scales), 1);
-	std::vector<std::vector<double> > cwtVec(scales.size());// = cwt(vec, scales, &mexh);
-	std::ifstream wcoefs_file("data/wcoefs.txt");
-	if (!wcoefs_file.good()) {
-    	return 0;
-  	}
-	for (size_t i = 0; i < cwtVec.size(); i++) {
-		getline(wcoefs_file,line);
-		std::stringstream stream(line);
-		cwtVec[i].resize(vec.size());
-		for (size_t j = 0; j < cwtVec[i].size(); j++) {
-			double val;
-			stream >> val;
-			cwtVec[i][j] = val;
-		}
-	}
-	
+	CWT mexhCWT;
+	std::vector<std::vector<double> > cwtVec = mexhCWT.compute(vec, scales);
 	std::vector<std::vector<bool> > result = findLocalMaxima(cwtVec, scales, 5);
 	std::vector<Ridge> ridges = findRidges(result, scales);
 	std::vector<size_t> peaks = identifyMajorPeaks(cwtVec, scales, ridges);

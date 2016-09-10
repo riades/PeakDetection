@@ -1,9 +1,15 @@
 FLAGS  = -std=c++11
-
+OPTS = -lfftw3 -lm
+FLM = findlocalmaxima
+FR = findridges
+IMP = identifymajorpeaks
+CONV = convolution/
+FFTWW = fftwwrappers
+FFTWC = fftwconvolve
 all: main
 
-main: main.o cwt.o findlocalmaxima.o findridges.o identifymajorpeaks.o
-	g++ main.o cwt.o findlocalmaxima.o findridges.o identifymajorpeaks.o -o main $(FLAGS)
+main: main.o cwt.o $(FLM).o $(FR).o $(IMP).o $(FFTWW).o $(FFTWC).o
+	g++ main.o cwt.o $(FLM).o $(FR).o $(IMP).o $(FFTWW).o $(FFTWC).o -o main $(FLAGS) $(OPTS) 
 
 main.o: main.cpp
 	g++ -c main.cpp $(FLAGS)
@@ -11,14 +17,20 @@ main.o: main.cpp
 cwt.o: cwt.cpp cwt.h
 	g++ -c cwt.cpp $(FLAGS)
 
-findlocalmaxima.o: findlocalmaxima.cpp findlocalmaxima.h 
-	g++ -c findlocalmaxima.cpp $(FLAGS)
+$(FLM).o: $(FLM).cpp $(FLM).h 
+	g++ -c $(FLM).cpp $(FLAGS)
 
-identifymajorpeaks.o: identifymajorpeaks.cpp identifymajorpeaks.h ridge.h
-	g++ -c identifymajorpeaks.cpp $(FLAGS)
+$(IMP).o: $(IMP).cpp $(IMP).h ridge.h
+	g++ -c $(IMP).cpp $(FLAGS)
 
-findridges.o: findridges.cpp findridges.h ridge.h
-	g++ -c findridges.cpp $(FLAGS)
+$(FR).o: $(FR).cpp $(FR).h ridge.h
+	g++ -c $(FR).cpp $(FLAGS)
+
+$(FFTWW).o: $(CONV)$(FFTWW).cpp $(CONV)$(FFTWW).h
+	g++ -c $(CONV)$(FFTWW).cpp $(FLAGS)
+
+$(FFTWC).o: $(CONV)$(FFTWC).cpp $(CONV)$(FFTWW).h
+	g++ -c $(CONV)$(FFTWC).cpp $(FLAGS)
 
 clean:
 	rm -rf *.o main

@@ -1,13 +1,15 @@
-#include "identifymajorpeaks.h"
 #include <algorithm>
-#include <iostream>
 #include <cmath>
 #include <limits>
 
+#include "identifymajorpeaks.h"
+
 std::vector<size_t> identifyMajorPeaks(const std::vector<std::vector<double> > &cwtVec, 
-	const std::vector<double> &scales, const std::vector<Ridge> &ridgeVec, 
-	double minScale, double maxScale, double SNRTh, size_t ridgeLenTh, 
-	size_t noiseWinSize, double minNoiseLevel) {
+									   const std::vector<double> &scales, 
+									   const std::vector<Ridge> &ridgeVec, 
+									   double minScale, double maxScale, 
+									   double SNRTh, size_t ridgeLenTh, 
+									   size_t noiseWinSize, double minNoiseLevel) {
 
 	size_t nMz = cwtVec[0].size();
 	std::vector<size_t> mzInd(ridgeVec.size());

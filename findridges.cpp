@@ -1,10 +1,10 @@
-#include "findridges.h"
 #include <algorithm>
 #include <map>
 #include <set>
 #include <unordered_set>
 #include <unordered_map>
-#include <iostream>
+
+#include "findridges.h"
 
 std::set<size_t> whichTrue(std::vector<bool> vec) {
 	std::set<size_t> result;
@@ -21,7 +21,8 @@ inline size_t absDiff(size_t a, size_t b) {
 }
 
 std::vector<Ridge> findRidges(const std::vector<std::vector<bool> > &localMax, 
-	const std::vector<double> &scales, size_t minWinSize, size_t gapTh) {
+							  const std::vector<double> &scales, 
+							  size_t minWinSize, size_t gapTh) {
 
 	size_t nMz = localMax[0].size();
 	std::unordered_map<size_t, Ridge> ridgeHashTable;
