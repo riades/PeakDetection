@@ -1,5 +1,5 @@
 FLAGS  = -std=c++11
-OPTS = -lfftw3 -lm
+OPTS = -lfftw3 -lfftw3_threads -lm
 FLM = findlocalmaxima
 FR = findridges
 IMP = identifymajorpeaks

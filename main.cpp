@@ -14,11 +14,13 @@
 int main() {
 	std::string line;
   	std::vector<double> vec;
-  	std::ifstream test_file ("data/test.txt");
-  	if (!test_file.good()) {
+  	std::string fileName; 
+  	getline(std::cin, fileName);
+  	std::ifstream testFile (fileName);
+  	if (!testFile.good()) {
     	return 0;
   	}
-  	while (getline(test_file,line)) {
+  	while (getline(testFile,line)) {
     	std::stringstream stream(line);
     	double mass, intensity;
     	stream >> mass >> intensity;
@@ -26,8 +28,7 @@ int main() {
   	}
 	std::vector<double> scales(63);
 	std::iota(std::begin(scales), std::end(scales), 1);
-	CWT mexhCWT;
-	std::vector<std::vector<double> > cwtVec = mexhCWT.compute(vec, scales);
+	std::vector<std::vector<double> > cwtVec = cwt(vec, scales);
 	std::vector<std::vector<bool> > result = findLocalMaxima(cwtVec, scales, 5);
 	std::vector<Ridge> ridges = findRidges(result, scales);
 	std::vector<size_t> peaks = identifyMajorPeaks(cwtVec, scales, ridges);

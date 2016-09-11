@@ -9,7 +9,9 @@ std::vector<size_t> identifyMajorPeaks(const std::vector<std::vector<double> > &
 									   const std::vector<Ridge> &ridgeVec, 
 									   double minScale, double maxScale, 
 									   double SNRTh, size_t ridgeLenTh, 
-									   size_t noiseWinSize, double minNoiseLevel) {
+									   size_t nearbyWinSize,
+									   size_t noiseWinSize, 
+									   double minNoiseLevel) {
 
 	size_t nMz = cwtVec[0].size();
 	std::vector<size_t> mzInd(ridgeVec.size());
@@ -52,7 +54,8 @@ std::vector<size_t> identifyMajorPeaks(const std::vector<std::vector<double> > &
 	}
 	std::vector<size_t> selected;
 	for (size_t i = 0; i < ridgeVec.size(); i++) {
-		if (scales[ridgeVec[i].level + ridgeVec[i].positions.size() - 1] >= ridgeLenTh 
+		if (mzInd[i] > nearbyWinSize / 2 && mzInd[i] < nMz - nearbyWinSize / 2
+			&& scales[ridgeVec[i].level + ridgeVec[i].positions.size() - 1] >= ridgeLenTh 
 			&& peakSNR[i] > SNRTh) {
 			selected.push_back(mzInd[i]);
 		}
