@@ -31,6 +31,12 @@ int main() {
 	std::vector<std::vector<double> > cwtVec = cwt(vec, scales);
 	std::vector<std::vector<bool> > result = findLocalMaxima(cwtVec, scales, 5);
 	std::vector<Ridge> ridges = findRidges(result, scales);
+	for (auto ridge: ridges) {
+		for (auto val: ridge.positions) {
+			std::cout << val << " ";
+		}
+		std::cout << std::endl;
+	}
 	std::vector<size_t> peaks = identifyMajorPeaks(cwtVec, scales, ridges);
 	for (size_t k: peaks) {
 		std::cout << k << ", ";
